@@ -1,1 +1,58 @@
-# SQL-Employee-Tracker
+# < SQL-Employee-Tracker >
+
+# User Story
+
+AS A business owner,
+I WANT to be able to view and manage the departments, roles, and employees in my company
+SO THAT I can organize and plan my business
+
+# Table of Contents
+
+- [Installation](#installation)
+- [Preview](#preview)
+- [Usage](#usage)
+- [Badges](#badges)
+- [Questions](#questions)
+
+# Installation
+
+1. Clone this SSH Key link: "git@github.com:addiguskey/SQL-Employee-Tracker.git" on your Terminal (Mac) or gitBash(Windows).
+
+2. This app uses [Inquirer](https://www.npmjs.com/search?q=inquirer), [mysql2](https://www.npmjs.com/package/mysql2), and [console.table](https://www.npmjs.com/package/console.table). You can simply install npm Express by running "npm i" on your Integrated Terminal in VS-Code
+
+3. Click [Usage](#usage) for a step-by-step videodemo of this application.
+
+# Preview
+
+# Usage
+
+GIVEN a command-line application that accepts user input
+
+- WHEN I start the application,
+  THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+- WHEN I choose to view all departments,
+  THEN I am presented with a formatted table showing department names and department ids
+- WHEN I choose to view all roles,
+  THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+- WHEN I choose to view all employees,
+  THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+- WHEN I choose to add a department,
+  THEN I am prompted to enter the name of the department and that department is added to the database
+- WHEN I choose to add a role,
+  THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+- WHEN I choose to add an employee,
+  THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+- WHEN I choose to update an employee role,
+  THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+
+# Badges
+
+![JS](https://img.shields.io/static/v1?label=JavaScript&message=70.4%&color=yellow) ![HTML](https://img.shields.io/static/v1?label=HTML&message=20.1%&color=red) ![CSS](https://img.shields.io/static/v1?label=CSS&message=9.5%&color=blueviolet)
+
+# Questions
+
+For any questions, you can either reach out to me on GitHub or via e-mail
+
+- Username: @addiguskey
+- GitHub Link: https://github.com/addiguskey
+- E-mail: addisonguskey@gmail.com
