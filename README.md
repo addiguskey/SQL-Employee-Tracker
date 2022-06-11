@@ -49,7 +49,7 @@ GIVEN a command-line application that accepts user input
 
 # Badges
 
-![JS](https://img.shields.io/static/v1?label=JavaScript&message=70.4%&color=yellow) ![HTML](https://img.shields.io/static/v1?label=HTML&message=20.1%&color=red) ![CSS](https://img.shields.io/static/v1?label=CSS&message=9.5%&color=blueviolet)
+![JS](https://img.shields.io/static/v1?label=JavaScript&message=100%&color=yellow)
 
 # Questions
 
