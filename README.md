@@ -9,7 +9,6 @@ SO THAT I can organize and plan my business
 # Table of Contents
 
 - [Installation](#installation)
-- [Preview](#preview)
 - [Usage](#usage)
 - [Badges](#badges)
 - [Questions](#questions)
@@ -21,8 +20,6 @@ SO THAT I can organize and plan my business
 2. This app uses [Inquirer](https://www.npmjs.com/search?q=inquirer), [mysql2](https://www.npmjs.com/package/mysql2), and [console.table](https://www.npmjs.com/package/console.table). You can simply install npm Express by running "npm i" on your Integrated Terminal in VS-Code
 
 3. Click [Usage](#usage) for a step-by-step videodemo of this application.
-
-# Preview
 
 # Usage
 
