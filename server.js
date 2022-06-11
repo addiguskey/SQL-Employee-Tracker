@@ -129,29 +129,25 @@ const viewAllEmp = async () => {
 
 //add Department
 const addDept = async () => {
-  //  try{ const res= await query(`SELECT ...`) } catch(error){ console.error(err);}
-
   const answers = await inquirer.prompt([
     {
       name: "newDept",
       type: "input",
       message: "What is the name of the department you would like to add?",
     },
-  ]); //end of prompt
-  //db.query gets replaced to const res = await query()
+  ]);
   try {
     const response = await query(`INSERT INTO department SET ?`, {
       name: answers.newDept,
     });
-    console.log(`\n ${response.newDept} successfully added to database! \n`);
-    viewAllDept();
+    console.log(`\n ${answers.newDept} successfully added to database! \n`);
     mainMenu();
   } catch (error) {
     console.error(err);
   }
 }; //end of addDept
 
-//adding a role - doubles>
+//adding a role
 const addRole = async () => {
   try {
     const res = await query(`SELECT * FROM department`);
