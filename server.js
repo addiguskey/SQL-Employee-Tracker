@@ -13,6 +13,7 @@ const db = mysql.createConnection(
   },
   console.log(`Connected to the office_db database.`)
 );
+
 const query = util.promisify(db.query).bind(db);
 mainMenu();
 
@@ -25,7 +26,7 @@ function mainMenu() {
         type: "list",
         message: "What would you like to do?",
         choices: [
-          //structure each option as a function then call for it in swithc/if statement
+          //structure each option as a function then call for it in swithc statement
           "View All Departments",
           "View All Roles",
           "View All Employees",
@@ -71,11 +72,11 @@ function mainMenu() {
       }
     });
 }
-//async await
+
 //viw All Department- shows dep names and ids
 const viewAllDept = async () => {
   try {
-    const res = await query(`SELECT* FROM department ORDER BY d_id ASC`);
+    const res = await query(`SELECT* FROM department ORDER BY id ASC`);
     console.table("\n", res, "\n");
     mainMenu();
   } catch (error) {
@@ -84,18 +85,16 @@ const viewAllDept = async () => {
 };
 //view all roles
 const viewAllRoles = async () => {
-  // query(
-  //   `SELECT role.r_id AS 'id', role.title, role.salary, department.d_name AS 'department' FROM role JOIN department ON role.department_id = department.d_id ORDER BY role.r_id ASC`,
-  //   (err, res) => {
-  //     if (err) throw err;
-  // console.table("\n", res, "\n");
-  // mainMenu();
-  //   }
-  // );
   //try{ cosnt res= await query(`SELECT ...`) } catch(error){ console.error(err);}
   try {
     const res = await query(
-      `SELECT role.r_id AS 'id', role.title, role.salary, department.d_name AS 'department' FROM role JOIN department ON role.department_id = department.d_id ORDER BY role.r_id ASC`
+      `SELECT role.id AS 'id', 
+        role.title, 
+        role.salary, 
+        department.name AS 'department' 
+        FROM role JOIN department 
+        ON role.department_id = department.id 
+        ORDER BY role.id ASC`
     );
     console.table("\n", res, "\n");
     mainMenu();
@@ -103,31 +102,36 @@ const viewAllRoles = async () => {
     console.error(err);
   }
 };
+
 //view all employes
+
 const viewAllEmp = async () => {
   try {
     const res = await query(
-      `SELECT employee.e_id AS 'id', employee.first_name, employee.last_name, role.title, department.d_name AS 'department', role.salary, manager_id AS 'manager' FROM employee, role, department WHERE department.d_id = role.department_id AND role.r_id = employee.role_id ORDER BY employee.e_id ASC`
+      `SELECT employee.id AS 'id', 
+        employee.first_name, 
+        employee.last_name, 
+        role.title, 
+        department.name AS 'department', 
+        role.salary, 
+        CONCAT (manager.first_name,' ', manager.last_name) AS 'manager name'
+        FROM employee JOIN role ON role.id = employee.role_id 
+        JOIN department ON department.id = role.department_id 
+        LEFT JOIN employee AS manager ON employee.manager_id = manager.id 
+        ORDER BY employee.id ASC`
     );
     console.table("\n", res, "\n");
     mainMenu();
   } catch (err) {
     console.error(err);
   }
-  // db.query(
-  //   `SELECT employee.e_id AS 'id', employee.first_name, employee.last_name, role.title, department.d_name AS 'department', role.salary, manager_id AS 'manager' FROM employee, role, department WHERE department.d_id = role.department_id AND role.r_id = employee.role_id ORDER BY employee.e_id ASC`,
-  //   (err, res) => {
-  //     if (err) throw err;
-  //     console.table("\n", res, "\n");
-  //     mainMenu();
-  //   }
-  // );
 };
 
 //add Department
 const addDept = async () => {
   //  try{ const res= await query(`SELECT ...`) } catch(error){ console.error(err);}
-  const response = await inquirer.prompt([
+
+  const answers = await inquirer.prompt([
     {
       name: "newDept",
       type: "input",
@@ -136,27 +140,25 @@ const addDept = async () => {
   ]); //end of prompt
   //db.query gets replaced to const res = await query()
   try {
-    const res = await query(`INSERT INTO department SET ?`, {
-      d_name: response.newDept,
+    const response = await query(`INSERT INTO department SET ?`, {
+      name: answers.newDept,
     });
-    console.log(`\n ${res.newDept} successfully added to database! \n`);
+    console.log(`\n ${response.newDept} successfully added to database! \n`);
     viewAllDept();
     mainMenu();
   } catch (error) {
     console.error(err);
   }
-};
+}; //end of addDept
 
-//       );
-// } //end of function addDept
-
+//adding a role - doubles>
 const addRole = async () => {
   try {
     const res = await query(`SELECT * FROM department`);
 
     let deptList = res.map((department) => ({
-      name: department.d_name,
-      value: department.d_id,
+      name: department.name,
+      value: department.id,
     }));
     const answers = await inquirer.prompt([
       {
@@ -181,13 +183,102 @@ const addRole = async () => {
       salary: answers.salary,
       department_id: answers.deptName,
     });
-    console.log(`\n ${response.title} successfully added to database! \n`);
+    console.log(`\n ${answers.title} successfully added to database! \n`);
+    mainMenu();
+  } catch (err) {
+    console.error(err);
+  }
+}; //end of addRole
+
+//add Employees
+const addEmp = async () => {
+  try {
+    const res = await query(`SELECT * FROM role`);
+
+    let roleList = res.map((role) => ({
+      name: role.title,
+      value: role.id,
+    }));
+
+    const mang = await query(`SELECT * FROM employee`);
+
+    let managerList = mang.map((employee) => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id,
+    }));
+    const answers = await inquirer.prompt([
+      {
+        name: "first_name",
+        type: "input",
+        message: "What is the employee's first name?",
+      },
+      {
+        name: "last_name",
+        type: "input",
+        message: "What is the employee's last name?",
+      },
+      {
+        name: "empRole",
+        type: "list",
+        message: "What is the employee's role?",
+        choices: roleList,
+      },
+      {
+        name: "empManager",
+        type: "list",
+        message: "Who is the employee's manager?",
+        choices: managerList,
+      },
+    ]);
+    const response = await query(`INSERT INTO employee SET ?`, {
+      first_name: answers.first_name,
+      last_name: answers.last_name,
+      role_id: answers.empRole,
+      manager_id: answers.empManager,
+    });
+    console.log(`\n ${answers.last_name} successfully added to database! \n`);
+    mainMenu();
+  } catch (err) {
+    console.error(err);
+  }
+}; //end of addEmp
+
+// updating employee role
+const updateEmpRole = async () => {
+  try {
+    const res = await query(`SELECT * FROM role`);
+
+    let roleList = res.map((role) => ({
+      name: role.title,
+      value: role.id,
+    }));
+    const emp = await query(`SELECT * FROM employee`);
+
+    let empList = emp.map((employee) => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id,
+    }));
+    const answers = await inquirer.prompt([
+      {
+        name: "empList",
+        type: "list",
+        message: "Which employee would you like to update?",
+        choices: empList,
+      },
+      {
+        name: "empNewRole",
+        type: "list",
+        message: "Which role do you want to assign the selected employee?",
+        choices: roleList,
+      },
+    ]);
+    const response = await query(
+      `UPDATE employee SET role_id = ${answers.empNewRole} WHERE employee.id = ${answers.empList}`
+    );
+    console.log(`\n Employee's role sucessfully updated !\n`);
     mainMenu();
   } catch (err) {
     console.error(err);
   }
 };
-//end of function addRole
-// function addEmp() {} //end of function addEmp
-
-// function updateEmpRole() {} //end of function updateEmpRole
+//end of function updateEmpRole
